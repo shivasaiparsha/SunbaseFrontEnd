@@ -351,87 +351,74 @@ async  function getDataFromDatabseBycriteria(criteria, value){
 
 // fecth remote api's 
 
-// async function getToken() {
-//     try {
+async function getToken() {
+    try {
 
-//         const token = sessionStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
 
-//         const resp = await fetch(`http://localhost:8080/sunbase/token`, {
-//             method: "POST",
-//             headers: {
-//                 'Content-Type': 'application/json',
+        const resp = await fetch(`http://localhost:8080/sunbase/token`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
                   
-//             },
-//             body: JSON.stringify({
-//                 "login_id": "test@sunbasedata.com",
-//                 "password": "Test@123"
-//             })
-//         });
+            },
+            body: JSON.stringify({
+                "login_id": "test@sunbasedata.com",
+                "password": "Test@123"
+            })
+        });
 
-//         console.log(resp);
+        console.log(resp);
 
-//         const  jwt = await resp.json();
+        const  jwt = await resp.json();
 
-//         console.log(jwt.accessToken);
-//         sessionStorage.setItem("data", jwt.accessToken);
-//         getCustomerList(jwt);
-//         return jwt;
-//     } catch (error) {
-//         console.error('Error:', error);
+        console.log(jwt.accessToken);
+        sessionStorage.setItem("data", jwt.accessToken);
+        getCustomerList(jwt);
+        return jwt;
+    } catch (error) {
+        console.error('Error:', error);
 
-//     }
-// }
-
-
-// async function getCustomerList(data) {
+    }
+}
 
 
-//     try {
-//         const res = await fetch(`http://localhost:8080/sunbase/customer-list`, {
-//             method: "GET",
-//             headers: {
-//                 "Authorization": `${sessionStorage.getItem("data")}`,
-//                 'Content-Type': 'application/json'
-//             },
-//         });
-
-//         const resData = await res.json();
-
-//         let arr = Object.keys(resData).map(key => resData[key]);
-//         arr.forEach(async (ele) => {
-//             let user = {
-//                 "firstName": ele.first_name,
-//                 "lastName": ele.last_name,
-//                 "street": ele.street,
-//                 "address": ele.address,
-//                 "city": ele.city,
-//                 "state": ele.state,
-//                 "email": ele.email,
-//                 "phone": ele.phone
-//             };
+async function getCustomerList(data) {
 
 
+    try {
+        const res = await fetch(`http://localhost:8080/sunbase/customer-list`, {
+            method: "GET",
+            headers: {
+                "Authorization": `${sessionStorage.getItem("data")}`,
+                'Content-Type': 'application/json'
+            },
+        });
 
-//             // const userCheck = await fetch(`http://localhost:8080/user/find-by-search/phone?value=${user.phone}`, {
-//             //     method: "GET",
-//             //     headers: {
-//             //         "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
-//             //         'Content-Type': 'application/json',
-//             //     }
-//             // });
+        const resData = await res.json();
 
-//             // let searchData = await userCheck.json();
-//             // searchData = searchData[0];
-//             // console.log(searchData);
-//             // if (!searchData)
-//                 addUser(user);
-//             // else updateUser(user, searchData.id);
-//         });
+        let arr = Object.keys(resData).map(key => resData[key]);
+        arr.forEach(async (ele) => {
+            let user = {
+                "firstName": ele.first_name,
+                "lastName": ele.last_name,
+                "street": ele.street,
+                "address": ele.address,
+                "city": ele.city,
+                "state": ele.state,
+                "email": ele.email,
+                "phone": ele.phone
+            };
 
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+
+
+             
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
