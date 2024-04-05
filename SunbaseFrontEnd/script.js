@@ -24,12 +24,17 @@
         let username=document.getElementById("uname").value;
         let password=document.getElementById("pass").value;
         
-        login(username, password);
-
-
+        if(username.match('test@sunbasedata.com'))
+        {
+            getToken();
+        }
+        else {
+            
+           login(username, password);
+        }
+ 
     }
 
-    // if(sessionStorage.getItem("token")) getDataFromDatabse();
 
 
      async function login(username, password)
@@ -149,48 +154,48 @@
 
    
         
-    //  let currentCustomerId;
-    //  async function editUser(customerId){
+     let currentCustomerId;
+     async function editUser(customerId){
 
         
-    //     const token = sessionStorage.getItem("token");
-    //     const res = await fetch(`http://localhost:8080/user/findCustomerById/${customerId}`, {
-    //         method: "GET",
-    //         headers: {
-    //             "Authorization": `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //         }
+        const token = sessionStorage.getItem("token");
+        const res = await fetch(`http://localhost:8080/user/findCustomerById/${customerId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
 
-    //     });
+        });
     
-    //     const data = await res.json();
+        const data = await res.json();
     
-    //     console.log(data);
+        console.log(data);
     
-    //     currEditId = customerId;
+        currEditId = customerId;
     
-    //     let firstName = submittedForm.querySelector("#first");
-    //     let lastName = submittedForm.querySelector("#last");
-    //     let city = submittedForm.querySelector("#city");
-    //     let street=submittedForm.querySelector("#street");
-    //     let address = submittedForm.querySelector("#address");
-    //     let state = submittedForm.querySelector("#state");
-    //     let email = submittedForm.querySelector("#email");
-    //     let phone = submittedForm.querySelector("#phone");
+        let firstName = submittedForm.querySelector("#first");
+        let lastName = submittedForm.querySelector("#last");
+        let city = submittedForm.querySelector("#city");
+        let street=submittedForm.querySelector("#street");
+        let address = submittedForm.querySelector("#address");
+        let state = submittedForm.querySelector("#state");
+        let email = submittedForm.querySelector("#email");
+        let phone = submittedForm.querySelector("#phone");
     
-    //     firstName.value = data.firstname;
-    //     lastName.value = data.lastname;
-    //     street.value =    data.street;
-    //     city.value = data.city;
-    //     address.value = data.address;
-    //     state.value = data.state;
-    //     email.value = data.email;
-    //     phone.value = data.phone;
+        firstName.value = data.firstname;
+        lastName.value = data.lastname;
+        street.value =    data.street;
+        city.value = data.city;
+        address.value = data.address;
+        state.value = data.state;
+        email.value = data.email;
+        phone.value = data.phone;
     
-    //     openRegForm.style.display = "flex";
-    // console.log("error occured");
+        openRegForm.style.display = "flex";
+    console.log("error occured");
         
-    //  }
+     }
 
      async function removeRow(customerId)
      {
