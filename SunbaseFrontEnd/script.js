@@ -73,7 +73,7 @@
             catch(err){
                 console.log(username,password);
                 alert("something went wrong");
-                console.log(err);
+                // console.log(err);
             }
      }
 
@@ -85,7 +85,7 @@
          openRegForm.style.display="flex"
 
     }
-    //close btn
+    
 
     
     closeBtn.addEventListener('click', () => {
@@ -97,7 +97,7 @@
 
   async  function getDataFromDatabse(){
          
-        // get token
+        
         let token=sessionStorage.getItem("token");
           
          try{
@@ -122,7 +122,7 @@
             });
 
             
-             console.log(tbody);
+             
          }
          catch(err){
                
@@ -131,78 +131,98 @@
 
      }
 
-     function getRow(ele, tbody)
-     {
+     function getRow(ele, tbody) {
         console.log(ele.customerId);
-        
+    
         tbody.innerHTML +=
-        `<tr id="${ele.customerId}">
-        <td>${ele.firstName}</td>
-        <td>${ele.lastName}</td>
-        <td>${ele.address}</td>
-        <td>${ele.city}</td>
-        <td>${ele.state}</td>
-        <td>${ele.email}</td>
-        <td>${ele.phone}</td>
-        <td>
-        
-            <i class="fa fa-trash" style="margin-inline:15px" onclick='removeRow(${ele.customerId})'></i>
-            <i class="fa fa-edit" onclick='editUser(${ele.customerId})'></i>
-        </td>
-</tr>`;
-     }
-
-   
-        
-     let currentCustomerId;
-     async function editUser(customerId){
-
-        
-        const token = sessionStorage.getItem("token");
-        const res = await fetch(`http://localhost:8080/user/findCustomerById/${customerId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Content-Type': 'application/json',
+            `<tr id="${ele.customerId}">
+            <td>${ele.firstName}</td>
+            <td>${ele.lastName}</td>
+            <td>${ele.address}</td>
+            <td>${ele.city}</td>
+            <td>${ele.state}</td>
+            <td>${ele.email}</td>
+            <td>${ele.phone}</td>
+            <td>
+                <i class="fa fa-trash" style="margin-inline:15px" onclick='removeRow("${ele.customerId}")'></i>
+                <i class="fa fa-edit" onclick='toggleEdit("${ele.customerId}")'></i>
+                <button class="rsbt" style="display:none;" onclick='submitRow("${ele.customerId}")'>Submit</button>
+            </td>
+        </tr>`;
+    }
+    
+    function toggleEdit(customerId) {
+        const editIcon = document.querySelector(`#tbody tr[id="${customerId}"] .fa-edit`);
+        const submitButton = document.querySelector(`#tbody tr[id="${customerId}"] .rsbt`);
+        const editableCells = document.querySelectorAll(`#tbody tr[id="${customerId}"] td`);
+    
+        if (editIcon && submitButton) {
+            editIcon.style.display = 'none';
+            submitButton.style.display = 'inline-block';
+            editableCells.forEach(cell => {
+                cell.setAttribute('contenteditable', 'true');
+            });
+        }
+    
+        // Make other rows non-editable
+        const allRows = document.querySelectorAll('tbody tr');
+        allRows.forEach(row => {
+            if (row.id !== customerId) {
+                const nonEditableCells = row.querySelectorAll('td');
+                nonEditableCells.forEach(cell => {
+                    cell.setAttribute('contenteditable', 'false');
+                });
             }
-
         });
+    }
     
-        const data = await res.json();
+    function submitRow(customerId) {
+        const editIcon = document.querySelector(`#tbody tr[id="${customerId}"] .fa-edit`);
+        const submitButton = document.querySelector(`#tbody tr[id="${customerId}"] .rsbt`);
+        const editableCells = document.querySelectorAll(`#tbody tr[id="${customerId}"] td`);
     
-        console.log(data);
+        if (editIcon && submitButton) {
+            editIcon.style.display = 'inline-block'; // Show the edit icon
+            submitButton.style.display = 'none'; // Hide the submit button
+            editableCells.forEach(cell => {
+                cell.setAttribute('contenteditable', 'false'); // Make the cells non-editable
+            });
+        }
+
+        let rowData = Array.from(editableCells).map(cell => cell.textContent);
+        rowData.length=7;
+        let user = {
+            "firstName": rowData[0],
+            "lastName": rowData[1],
+            "address": rowData[2],
+            "city": rowData[3],
+            "state": rowData[4],
+            "email": rowData[5],
+            "phone": rowData[6]
+        };
+        console.log('Data from row:', rowData);
+        console.log("user data", user);
+
+        const rowToRemove = document.querySelector(`#tbody tr[id="${customerId.id}"]`);
+        if (rowToRemove) {
+            rowToRemove.remove();
+            console.log('Row removed from the table.');
+        } else {
+            console.log('Row not found.');
+        }
+
+        addUser(user);
+
+    }
     
-        currEditId = customerId;
-    
-        let firstName = submittedForm.querySelector("#first");
-        let lastName = submittedForm.querySelector("#last");
-        let city = submittedForm.querySelector("#city");
-        let street=submittedForm.querySelector("#street");
-        let address = submittedForm.querySelector("#address");
-        let state = submittedForm.querySelector("#state");
-        let email = submittedForm.querySelector("#email");
-        let phone = submittedForm.querySelector("#phone");
-    
-        firstName.value = data.firstname;
-        lastName.value = data.lastname;
-        street.value =    data.street;
-        city.value = data.city;
-        address.value = data.address;
-        state.value = data.state;
-        email.value = data.email;
-        phone.value = data.phone;
-    
-        openRegForm.style.display = "flex";
-    console.log("error occured");
-        
-     }
 
      async function removeRow(customerId)
      {
+        console.log(customerId);
     const token=sessionStorage.getItem("token");
   
     try {
-        const res= await fetch(`http://localhost:8080/customer/deleteByID/${customerId}`, {
+        const res= await fetch(`http://localhost:8080/customer/deleteByID/${customerId.id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -238,7 +258,7 @@ submittedForm.addEventListener('submit', (e) => {
         "phone": e.target.phone.value
     };
 
-    console.log(user);
+    
 
     //I'll have to sent the Post Request... here we go...
     addUser(user);
@@ -265,7 +285,7 @@ async function addUser(user) {
         const tbody = document.getElementById("tbody");
 
         getRow(data, tbody);
-        console.log(data);
+       
         alert("customer added successfully")
 
     } catch (error) {
@@ -282,7 +302,7 @@ let criteria='all'
 
 search.addEventListener(('change'), (e) => {
     criteria = e.target.value;
-    console.log(criteria);
+  
 })
 
 
@@ -290,7 +310,7 @@ faSearch.addEventListener('click', (e) => {
    
     const input = document.getElementById("input")
     let value = input.value;
-    console.log(criteria, value);
+    
     getDataFromDatabseBycriteria(criteria, value.trim());
 })
 
@@ -355,6 +375,9 @@ async  function getDataFromDatabseBycriteria(criteria, value){
 }
 
 // fecth remote api's 
+const syncButton=document.querySelector(".sync")
+
+syncButton.addEventListener("click" , getToken)
 
 async function getToken() {
     try {
