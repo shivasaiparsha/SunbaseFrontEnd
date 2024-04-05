@@ -1,0 +1,198 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    display: block;
+}
+
+.login-container h1 {
+   
+    position: relative;
+    left: 5px;
+     margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group input[type="submit"] {
+    width: 100%;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: linear-gradient(to right, blue, indigo, violet);
+    transition: 0.5s;
+}
+
+.form-group input[type="submit"]:hover {
+    background: linear-gradient(to right, blue, violet, indigo);
+}
+
+.cutomerList-container {
+    position: absolute;
+    left: 50px;
+    top: 30px;
+    max-width: 2000px;
+    display: none;
+}
+
+h1 {
+    text-align: center;
+    position: relative;
+    top: 0px;
+    left: 400px;
+}
+
+table {
+    position: relative;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 50px;
+}
+
+th, td {
+    padding: 20px;
+    text-align: left;
+    /* border-bottom: 1px solid #979292;
+    border-right: 1px solid rgb(153, 150, 150); */
+}
+
+th {
+    background-color: #e3d6d6;
+}
+
+tr:nth-child(even) {
+    background-color: #e2dddd;
+}
+
+.action-icons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-icon, .delete-icon {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.button-list {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Added gap for spacing between elements */
+    
+}
+
+button,
+select {
+    height: 35px; /* Adjusted height to 30px */
+    /* Other styles remain unchanged */
+    width: 100px;
+}
+.sync-btn {
+    margin-left: 20px;
+    
+}
+
+#input{
+    height: 30px;
+}
+
+.Customer_form {
+    display: none; /* Initially hide the registration form */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    /* background-color: rgba(159, 162, 198, 0.548); */
+    background-color: rgba(27, 24, 24, 0.5);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 999; /* Ensure the registration form is above other content */
+}
+
+.Customer_form form {
+    min-width: 50vw;
+    position: relative;
+    background-color: rgba(240, 247, 246, 0.904);
+    padding: 50px;
+    padding-top: 100px;
+    border: 2px solid black;
+}
+
+.Customer_form input {
+    padding: 10px;
+    margin: 10px 20px;
+    min-width: 400px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+}
+
+.Customer_form .btn {
+    background-color: #7f4986;
+    padding: 10px 20px;
+    font-weight: 700;
+    color: white;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 50px;
+}
+
+.Customer_form form div:last-child {
+    text-align: right;
+    position: relative;
+    right: 0;
+}
+
+.close-btn {
+    font-size: 30px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    color: rgb(0,0,0);
+}
+
+.fa-trash,
+.fa-edit,
+.fa-search {
+    cursor: pointer;
+}
