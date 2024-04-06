@@ -131,25 +131,7 @@
 
      }
 
-     function getRow(ele, tbody) {
-        console.log(ele.customerId);
-    
-        tbody.innerHTML +=
-            `<tr id="${ele.customerId}">
-            <td>${ele.firstName}</td>
-            <td>${ele.lastName}</td>
-            <td>${ele.address}</td>
-            <td>${ele.city}</td>
-            <td>${ele.state}</td>
-            <td>${ele.email}</td>
-            <td>${ele.phone}</td>
-            <td>
-                <i class="fa fa-trash" style="margin-inline:15px" onclick='removeRow("${ele.customerId}")'></i>
-                <i class="fa fa-edit" onclick='toggleEdit("${ele.customerId}")'></i>
-                <button class="rsbt" style="display:none;" onclick='submitRow("${ele.customerId}")'>Submit</button>
-            </td>
-        </tr>`;
-    }
+
     
     function toggleEdit(customerId) {
         const editIcon = document.querySelector(`#tbody tr[id="${customerId}"] .fa-edit`);
@@ -163,6 +145,8 @@
                 cell.setAttribute('contenteditable', 'true');
             });
         }
+
+        alert("Edit details by clicking on the field you want to modify.")
     
         // Make other rows non-editable
         const allRows = document.querySelectorAll('tbody tr');
@@ -192,6 +176,7 @@
         let rowData = Array.from(editableCells).map(cell => cell.textContent);
         rowData.length=7;
         let user = {
+            "customerId":customerId,
             "firstName": rowData[0],
             "lastName": rowData[1],
             "address": rowData[2],
@@ -200,29 +185,32 @@
             "email": rowData[5],
             "phone": rowData[6]
         };
-        console.log('Data from row:', rowData);
-        console.log("user data", user);
+       
 
-        const rowToRemove = document.querySelector(`#tbody tr[id="${customerId.id}"]`);
-        if (rowToRemove) {
-            rowToRemove.remove();
-            console.log('Row removed from the table.');
-        } else {
-            console.log('Row not found.');
-        }
-
-        addUser(user);
+        const rowToRemove = document.querySelector(`#tbody tr[id="${customerId}"]`);
+        console.log(rowToRemove, customerId);
+        // if (rowToRemove) {
+        //     rowToRemove.remove();
+        //     console.log('Row removed from the table.');
+        // } else {
+        //     console.log('Row not found.');
+        // }
+         
+        rowToRemove.remove();
+          
+        addCustomerToDb(user);
+        
 
     }
     
 
      async function removeRow(customerId)
      {
-        console.log(customerId);
+        
     const token=sessionStorage.getItem("token");
-  
+        
     try {
-        const res= await fetch(`http://localhost:8080/customer/deleteByID/${customerId.id}`, {
+        const res= await fetch(`http://localhost:8080/customer/deleteByID/${customerId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -230,9 +218,10 @@
             }
         })
 
-        alert("Deleted Successfully");
+       
         const row = document.getElementById(customerId);
         row.parentNode.removeChild(row);
+        alert("Deleted Successfully");
 
     } catch (error) {
         console.log("error occured")
@@ -248,6 +237,7 @@ submittedForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     let user = {
+        "customerId":"null",
         "firstName": e.target.first.value,
         "lastName": e.target.last.value,
         "street": e.target.street.value,
@@ -261,15 +251,17 @@ submittedForm.addEventListener('submit', (e) => {
     
 
     //I'll have to sent the Post Request... here we go...
-    addUser(user);
+    addCustomerToDb(user);
     submittedForm.reset();
     closeBtn.click();
 
 });
 
 
-async function addUser(user) {
+async function addCustomerToDb(user) {
     try {
+
+        console.log(user);
         const token = sessionStorage.getItem("token");
         const res = await fetch(`http://localhost:8080/customer/AddCustomer`, {
             method: "POST",
@@ -286,12 +278,32 @@ async function addUser(user) {
 
         getRow(data, tbody);
        
-        alert("customer added successfully")
+        alert('successful')
 
     } catch (error) {
-        alert("Updated User");
+        alert(error);
     }
 
+}
+
+function getRow(ele, tbody) {
+    
+
+    tbody.innerHTML +=
+        `<tr id="${ele.customerId}">
+        <td>${ele.firstName}</td>
+        <td>${ele.lastName}</td>
+        <td>${ele.address}</td>
+        <td>${ele.city}</td>
+        <td>${ele.state}</td>
+        <td>${ele.email}</td>
+        <td>${ele.phone}</td>
+        <td>
+            <i class="fa fa-trash" style="margin-inline:15px" onclick='removeRow("${ele.customerId}")'></i>
+            <i class="fa fa-edit" onclick='toggleEdit("${ele.customerId}")'></i>
+            <button class="rsbt" style="display:none;" onclick='submitRow("${ele.customerId}")'>Submit</button>
+        </td>
+    </tr>`;
 }
 
 // get data from datbase when customer click on  search value
@@ -380,9 +392,11 @@ const syncButton=document.querySelector(".sync")
 syncButton.addEventListener("click" , getToken)
 
 async function getToken() {
+
     try {
 
         const token = sessionStorage.getItem("token");
+        if(!sessionStorage.getItem('data')){
 
         const resp = await fetch(`http://localhost:8080/sunbase/token`, {
             method: "POST",
@@ -396,12 +410,16 @@ async function getToken() {
             })
         });
 
-        console.log(resp);
-
-        const  jwt = await resp.json();
-
-        console.log(jwt.accessToken);
+        const jwt=await resp.json();
         sessionStorage.setItem("data", jwt.accessToken);
+    }
+
+        
+
+       const  jwt = sessionStorage.getItem("data");
+
+        
+       
         getCustomerList(jwt);
         return jwt;
     } catch (error) {
@@ -411,14 +429,16 @@ async function getToken() {
 }
 
 
-async function getCustomerList(data) {
+
+
+async function getCustomerList(jwt) {
 
 
     try {
         const res = await fetch(`http://localhost:8080/sunbase/customer-list`, {
             method: "GET",
             headers: {
-                "Authorization": `${sessionStorage.getItem("data")}`,
+                "Authorization": `${jwt}`,
                 'Content-Type': 'application/json'
             },
         });
@@ -428,6 +448,7 @@ async function getCustomerList(data) {
         let arr = Object.keys(resData).map(key => resData[key]);
         arr.forEach(async (ele) => {
             let user = {
+                "customerId":ele.uuid,
                 "firstName": ele.first_name,
                 "lastName": ele.last_name,
                 "street": ele.street,
@@ -436,12 +457,12 @@ async function getCustomerList(data) {
                 "state": ele.state,
                 "email": ele.email,
                 "phone": ele.phone
-            };
+            };        
 
-
-
-             
+            addCustomerToDb(user);
         });
+
+       
 
     } catch (error) {
         console.log(error);
