@@ -389,10 +389,21 @@ async  function getDataFromDatabseBycriteria(criteria, value){
 // fecth remote api's 
 const syncButton=document.querySelector(".sync")
 
-syncButton.addEventListener("click" , getToken)
+syncButton.addEventListener("click", function() {
+    // Check if item is present in session storage
+    const item = sessionStorage.getItem("data"); 
+    if (item) {
+        // Call getCustomerList with the item from session storage
+        getCustomerList(item);
+    } else {
+        // Call getToken API if item is not present in session storage
+        getToken();
+    }
+});
 
 async function getToken() {
 
+    
     try {
 
         const token = sessionStorage.getItem("token");
@@ -412,6 +423,7 @@ async function getToken() {
 
         const jwt=await resp.json();
         sessionStorage.setItem("data", jwt.accessToken);
+      
     }
 
         
@@ -433,7 +445,7 @@ async function getToken() {
 
 async function getCustomerList(jwt) {
 
-
+    alert("Wait!! It takes some time to reload the data");
     try {
         const res = await fetch(`http://localhost:8080/sunbase/customer-list`, {
             method: "GET",
