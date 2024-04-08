@@ -188,7 +188,7 @@ async function handleBodyClick(event) {
     // Check if the click occurred outside of the cloned row
     if (!event.target.closest('.selected-row')&&check) {
         // Remove the cloned row
-        console.log(event.target)
+      
         clonedRow.remove();
         document.body.removeEventListener('click', handleBodyClick);
 
@@ -225,7 +225,7 @@ function submitRow(customerId) {
     const table = document.getElementsByTagName('table')[0];
     
     const clonerow=document.querySelector('.selected-row')
-    console.log(clonerow);
+ 
     
 
     let Icon = clonerow.querySelector('.fa.fa-edit');
@@ -346,7 +346,7 @@ closeBtn.click();
 async function addCustomerToDb(user) {
 try {
 
-    console.log(user);
+   
     const token = sessionStorage.getItem("token");
     const res = await fetch(`http://localhost:8080/customer/AddCustomer`, {
         method: "POST",
