@@ -230,6 +230,7 @@ function submitRow(customerId) {
 
     let Icon = clonerow.querySelector('.fa.fa-edit');
     let submitOfClonedRow = clonerow.querySelector('.rsbt');
+    let nodes=clonerow.childNodes
      
     if(Icon&&submitOfClonedRow)
     {
@@ -239,20 +240,22 @@ function submitRow(customerId) {
         });
 
       
-
+         
         table.classList.remove('blur');
     }
+
     
     if (editIcon && submitButton) {
         editIcon.style.display = 'inline-block'; // Show the edit icon
         submitButton.style.display = 'none'; // Hide the submit button
         
-        editableCells.forEach(cell => {
+        nodes.forEach(cell => {
             cell.setAttribute('contenteditable', 'false'); // Make the cells non-editable
         });
     }
+   
 
-    let rowData = Array.from(editableCells).map(cell => cell.textContent);
+    let rowData = Array.from(nodes).map(cell => cell.textContent);
     rowData.length=7;
     let user = {
         "customerId":customerId,
@@ -269,7 +272,6 @@ function submitRow(customerId) {
    
 
     const rowToRemove = document.querySelector(`#tbody tr[id="${customerId}"]`);
-    console.log(rowToRemove, customerId);
     // if (rowToRemove) {
     //     rowToRemove.remove();
     //     console.log('Row removed from the table.');
