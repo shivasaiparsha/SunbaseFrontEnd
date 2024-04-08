@@ -12,7 +12,7 @@ const openRegForm=document.querySelector('.Customer_form');
 const addCustomer=document.querySelector(".add-customer-btn");
 const closeBtn=document.querySelector(".close-btn");
 const submittedForm=document.getElementById("mern")
-
+let check=false;
 addCustomer.addEventListener("click", openRegistrationForm);
 
 
@@ -182,27 +182,32 @@ async  function getDataFromDatabse(){
         }
     });
 
-//     document.body.addEventListener('click', handleBodyClick);
+    document.body.addEventListener('click', handleBodyClick);
 
-// function handleBodyClick(event) {
-//     // Check if the click occurred outside of the cloned row
-//     if (!event.target.closest('.selected-row')) {
-//         // Remove the cloned row
-//         console.log(event.target)
-//         clonedRow.remove();
+async function handleBodyClick(event) {
+    // Check if the click occurred outside of the cloned row
+    if (!event.target.closest('.selected-row')&&check) {
+        // Remove the cloned row
+        console.log(event.target)
+        clonedRow.remove();
+        document.body.removeEventListener('click', handleBodyClick);
 
-//         // Show the original row
-//         editableCells.forEach(cell => {
-//             cell.style.display = '';
-//         });
+        // Show the original row
+        editableCells.forEach(cell => {
+            cell.style.display = '';
+        });
+        
+       check=false;
 
-//         // Remove the blur effect from the table
-//         table.classList.remove('blur');
+        // Remove the blur effect from the table
+        table.classList.remove('blur');
 
-//         // Remove event listener from the body
-//         document.body.removeEventListener('click', handleBodyClick);
-//     }
-//  }
+        // Remove event listener from the body
+      
+    }
+    else
+    check=true;
+ }
 
 }
    
